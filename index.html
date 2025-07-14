@@ -2,124 +2,131 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>Replay & Consensus Sync Stack</title>
- <link rel="manifest" href="manifest.json" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+ <title>Phase 14 Governance PWA</title>
  <meta name="theme-color" content="#0f0f0f" />
- <link rel="icon" href="favicon.png" />
  <style>
    body {
      margin: 0;
-     font-family: system-ui, sans-serif;
      background: #0f0f0f;
      color: #f0f0f0;
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     padding: 2rem;
+     font-family: system-ui, sans-serif;
    }
-   h1 {
-     font-size: 1.8rem;
-     margin-bottom: 0.5rem;
+   nav {
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: center;
+     background: #1a1a1a;
+     padding: 0.5rem;
+     border-bottom: 1px solid #444;
+   }
+   nav button {
+     background: #222;
+     color: #fff;
+     border: 1px solid #555;
+     padding: 0.4rem 0.8rem;
+     margin: 0.2rem;
+     cursor: pointer;
+     border-radius: 4px;
+   }
+   nav button:hover {
+     background: #333;
+   }
+   .container {
+     display: none;
+     padding: 1rem;
+   }
+   .active {
+     display: block;
    }
    .module {
-     margin: 1rem 0;
-     padding: 1rem;
+     background: #1a1a1a;
      border: 1px solid #444;
      border-radius: 8px;
-     width: 100%;
+     margin: 1rem auto;
+     padding: 1rem;
      max-width: 600px;
-     background: #1a1a1a;
    }
    .module h2 {
-     margin-top: 0;
+     margin: 0 0 0.5rem;
      font-size: 1.2rem;
    }
-   .replay { color: #66ccff; font-weight: bold; }
-   .fork { color: #ffcc66; font-weight: bold; }
-   .custody { color: #99ccff; font-weight: bold; }
-   .verdict { color: #ff99aa; font-weight: bold; }
-   .override { color: #ccff99; font-weight: bold; }
-   button {
+   .value {
+     font-weight: bold;
+     color: #99ccff;
+   }
+   button.action {
      background: #222;
      color: #fff;
      border: 1px solid #555;
      padding: 0.5rem 1rem;
+     margin-top: 0.5rem;
      border-radius: 4px;
      cursor: pointer;
    }
-   button:hover {
+   button.action:hover {
      background: #333;
    }
  </style>
 </head>
 <body>
- <h1>🔍 Phase 14 Replay + Transparency Engine</h1>
 
- <div class="module">
-   <h2>Ledger Graph Replay</h2>
-   <p>Replayed state hash: <span class="replay" id="ledgerHash">--</span></p>
-   <button onclick="replayLedger()">Replay Ledger</button>
+ <nav>
+   <button onclick="showPage('identity')">🔐 Identity</button>
+   <button onclick="showPage('arbitration')">⚖️ Arbitration</button>
+   <button onclick="showPage('governance')">🗳️ Governance</button>
+   <button onclick="showPage('credit')">💠 Credit</button>
+   <button onclick="showPage('transparency')">🔍 Transparency</button>
+   <button onclick="showPage('ledger')">📊 Ledger</button>
+ </nav>
+
+ <div id="identity" class="container active">
+   <div class="module"><h2>Credit Score</h2><p>Score: <span class="value" id="creditScore">--</span></p><button class="action" onclick="update('creditScore', () => Math.floor(Math.random()*1000))">Refresh</button></div>
+   <div class="module"><h2>Trust Weight</h2><p>Weight: <span class="value" id="trustWeight">--</span></p><button class="action" onclick="update('trustWeight', () => (Math.random()*10).toFixed(2))">Simulate</button></div>
+   <div class="module"><h2>Memory Divergence</h2><p>Mismatch: <span class="value" id="memoryScore">--</span></p><button class="action" onclick="update('memoryScore', () => (Math.random()*100).toFixed(1)+'%')">Compare</button></div>
  </div>
 
- <div class="module">
-   <h2>Meta-Fork Scanner</h2>
-   <p>Fork tension level: <span class="fork" id="forkTension">--</span></p>
-   <button onclick="scanForks()">Scan Fork</button>
+ <div id="arbitration" class="container">
+   <div class="module"><h2>Honor Score</h2><p>Score: <span class="value" id="honorScore">--</span></p><button class="action" onclick="update('honorScore', () => Math.floor(Math.random()*40+60))">Calculate</button></div>
+   <div class="module"><h2>Healing Index</h2><p>Status: <span class="value" id="healingScore">--</span></p><button class="action" onclick="update('healingScore', () => (Math.random()*100).toFixed(1)+'%')">Measure</button></div>
+   <div class="module"><h2>Proof-of-Governance</h2><p>Hash: <span class="value" id="proofHash">--</span></p><button class="action" onclick="update('proofHash', () => 'PG-'+Math.random().toString(36).substr(2,10).toUpperCase())">Generate</button></div>
  </div>
 
- <div class="module">
-   <h2>Custody Chain Tracker</h2>
-   <p>Chain ID: <span class="custody" id="chainId">--</span></p>
-   <button onclick="trackChain()">Track Chain</button>
+ <div id="governance" class="container">
+   <div class="module"><h2>Vote Weight</h2><p>Weight: <span class="value" id="voteWeight">--</span></p><button class="action" onclick="update('voteWeight', () => Math.floor(Math.random()*1000))">Cast</button></div>
+   <div class="module"><h2>Amplitude Score</h2><p>Signal: <span class="value" id="ampScore">--</span></p><button class="action" onclick="update('ampScore', () => (Math.random()*100).toFixed(1)+'%')">Scan</button></div>
+   <div class="module"><h2>Choreography Pattern</h2><p>Pattern: <span class="value" id="choreoPattern">--</span></p><button class="action" onclick="update('choreoPattern', () => ['EchoLoop','TriadSync','BeaconChain'][Math.floor(Math.random()*3)])">Simulate</button></div>
  </div>
 
- <div class="module">
-   <h2>Verdict Reconciliation Sync</h2>
-   <p>Consensus alignment: <span class="verdict" id="consensusScore">--</span></p>
-   <button onclick="syncVerdict()">Sync Verdicts</button>
+ <div id="credit" class="container">
+   <div class="module"><h2>Reputation Tokens</h2><p>Earned: <span class="value" id="repTokens">--</span></p><button class="action" onclick="update('repTokens', () => Math.floor(Math.random()*100+10))">Accumulate</button></div>
+   <div class="module"><h2>Credit Bundle</h2><p>Score: <span class="value" id="bundleScore">--</span></p><button class="action" onclick="update('bundleScore', () => (Math.random()*100).toFixed(1)+'%')">Score</button></div>
+   <div class="module"><h2>Compressed Payload</h2><p>Size: <span class="value" id="compressSize">--</span></p><button class="action" onclick="update('compressSize', () => Math.floor(Math.random()*400+100)+'b')">Compress</button></div>
  </div>
 
- <div class="module">
-   <h2>Override Appeal Quotient</h2>
-   <p>Override score: <span class="override" id="overrideScore">--</span></p>
-   <button onclick="calculateOverride()">Evaluate Appeal</button>
+ <div id="transparency" class="container">
+   <div class="module"><h2>Ledger Replay</h2><p>Hash: <span class="value" id="ledgerHash">--</span></p><button class="action" onclick="update('ledgerHash', () => '0x'+Math.floor(Math.random()*9999999).toString(16))">Replay</button></div>
+   <div class="module"><h2>Fork Tension</h2><p>Level: <span class="value" id="forkTension">--</span></p><button class="action" onclick="update('forkTension', () => (Math.random()*100).toFixed(1)+'%')">Scan</button></div>
+   <div class="module"><h2>Override Score</h2><p>Appeal: <span class="value" id="overrideScore">--</span></p><button class="action" onclick="update('overrideScore', () => (Math.random()*100).toFixed(1)+'%')">Evaluate</button></div>
+ </div>
+
+ <div id="ledger" class="container">
+   <div class="module"><h2>Replay Anchor</h2><p>Hash: <span class="value" id="replayAnchor">--</span></p><button class="action" onclick="update('replayAnchor', () => '0x'+Math.floor(Math.random()*9999999).toString(16))">Replay</button></div>
+   <div class="module"><h2>Chain Anchor ID</h2><p>ID: <span class="value" id="chainAnchor">--</span></p><button class="action" onclick="update('chainAnchor', () => 'ANCH-'+Math.random().toString(36).substr(2,10).toUpperCase())">Generate</button></div>
+   <div class="module"><h2>Trust Graph Explorer</h2><p>Status: <span class="value" id="trustGraphStatus">--</span></p><button class="action" onclick="update('trustGraphStatus', () => ['Synced','Diverging','Offline'][Math.floor(Math.random()*3)])">Check</button></div>
  </div>
 
  <script>
-   if ("serviceWorker" in navigator) {
-     navigator.serviceWorker.register("sw.js");
+   function showPage(id) {
+     document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+     document.getElementById(id).classList.add('active');
    }
 
-   function replayLedger() {
-     const hash = "0x" + Math.floor(Math.random() * 9999999).toString(16);
-     document.getElementById("ledgerHash").textContent = hash;
-     alert("Ledger replayed from anchor: " + hash);
-   }
-
-   function scanForks() {
-     const tension = (Math.random() * 100).toFixed(1);
-     document.getElementById("forkTension").textContent = tension + "%";
-     alert("Fork tension scanned: " + tension + "%");
-   }
-
-   function trackChain() {
-     const id = "CHAIN-" + Math.random().toString(36).substr(2, 10).toUpperCase();
-     document.getElementById("chainId").textContent = id;
-     alert("Custody chain identified: " + id);
-   }
-
-   function syncVerdict() {
-     const score = (Math.random() * 100).toFixed(1);
-     document.getElementById("consensusScore").textContent = score + "%";
-     alert("Verdict consensus alignment: " + score + "%");
-   }
-
-   function calculateOverride() {
-     const override = (Math.random() * 100).toFixed(1);
-     document.getElementById("overrideScore").textContent = override + "%";
-     alert("Override appeal score: " + override + "%");
+   function update(id, fn) {
+     const el = document.getElementById(id);
+     if (el) el.textContent = fn();
    }
  </script>
+
 </body>
 </html>
